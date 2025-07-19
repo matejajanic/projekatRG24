@@ -16,6 +16,10 @@ class MainController : public engine::core::Controller {
 
     void draw_space_station();
 
+    void update_camera();
+
+    void update() override;
+
     void begin_draw() override;
 
     void draw() override;
