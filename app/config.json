@@ -4,6 +4,9 @@
       "space_station": {
         "path": "space_station/scene.gltf",
         "flip_uvs": true
+      },
+      "sphere": {
+        "path": "sphere/sphere.obj"
       }
     }
   },

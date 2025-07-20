@@ -75,9 +75,49 @@ void MainController::draw_space_station() {
     shader->set_vec3("dir_light.diffuse", diffuse);
     shader->set_vec3("dir_light.specular", specular);
 
+    //Point lights
+    for (int i = 0; i < 5; ++i) {
+        std::string idx = std::to_string(i);
+        shader->set_vec3("pointLights[" + idx + "].position", gui->point_light_positions[i]);
+        shader->set_vec3("pointLights[" + idx + "].ambient", gui->point_light_colors[i] * 0.02f);
+        shader->set_vec3("pointLights[" + idx + "].diffuse", gui->point_light_colors[i] * 0.8f);
+        shader->set_vec3("pointLights[" + idx + "].specular", gui->point_light_colors[i]);
+
+        shader->set_float("pointLights[" + idx + "].constant", gui->get_point_light_constant());
+        shader->set_float("pointLights[" + idx + "].linear", gui->get_point_light_linear());
+        shader->set_float("pointLights[" + idx + "].quadratic", gui->get_point_light_quadratic());
+    }
+
 
     space_station->draw(shader);
 }
+
+void MainController::draw_spheres() {
+    auto gui = Controller::get<GuiController>();
+    auto graphics = Controller::get<engine::graphics::GraphicsController>();
+    auto resources = Controller::get<engine::resources::ResourcesController>();
+
+    engine::resources::Model *sphere_model = resources->model("sphere");
+
+    auto shader = resources->shader("sphere");
+    shader->use();
+
+    shader->set_mat4("projection", graphics->projection_matrix());
+    shader->set_mat4("view", graphics->camera()
+                                     ->view_matrix());
+
+    for (int i = 0; i < 5; ++i) {
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, gui->point_light_positions[i]);
+        model = glm::scale(model, glm::vec3(0.00002f));  // veličina kocke
+
+        shader->set_mat4("model", model);
+        shader->set_vec3("color", gui->point_light_colors[i]);
+
+        sphere_model->draw(shader);
+    }
+}
+
 
 void MainController::update_camera() {
     auto gui_controller = engine::core::Controller::get<GuiController>();
@@ -133,6 +173,7 @@ void MainController::draw_skybox() {
 
 void MainController::draw() {
     draw_space_station();
+    draw_spheres();
     draw_skybox();
 }
 

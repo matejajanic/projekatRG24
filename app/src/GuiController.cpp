@@ -37,6 +37,25 @@ void GuiController::draw() {
     ImGui::Text("Directional Light");
     ImGui::SliderFloat("Intensity: ", &dir_light_intensity, 0.0f, 6.0f);
 
+    // Point Lights (Stars)
+    ImGui::Separator();
+    ImGui::Text("Point Lights (Stars)");
+
+    for (int i = 0; i < 5; ++i) {
+        std::string label = "Star " + std::to_string(i + 1);
+        if (ImGui::TreeNode(label.c_str())) {
+            ImGui::SliderFloat3(("Position##" + std::to_string(i + 1)).c_str(), &point_light_positions[i].x, -2.0f,
+                                2.0f);
+            ImGui::ColorEdit3(("Color##" + std::to_string(i + 1)).c_str(), &point_light_colors[i].x);
+            ImGui::TreePop();
+        }
+    }
+
+    ImGui::SliderFloat("Constant", &point_light_constant, 0.5f, 2.0f);
+    ImGui::SliderFloat("Linear", &point_light_linear, 0.0f, 0.1f);
+    ImGui::SliderFloat("Quadratic", &point_light_quadratic, 0.0f, 0.01f);
+
+
     ImGui::End();
 
     graphics->end_gui();
