@@ -56,7 +56,7 @@ void MainController::draw_space_station() {
                                      ->view_matrix());
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, -50.0f));
-    model = glm::scale(model, glm::vec3(0.3f));
+    model = glm::scale(model, glm::vec3(0.1f));
     model = glm::rotate(model, glm::radians(-60.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     shader->set_mat4("model", model);
     space_station->draw(shader);
@@ -106,9 +106,17 @@ void MainController::begin_draw() {
     engine::graphics::OpenGL::clear_buffers();
 }
 
-void MainController::draw() {
+void MainController::draw_skybox() {
+    auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
+    auto skybox = resources->skybox("red_skybox1");
+    auto shader = resources->shader("skybox");
+    auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
+    graphics->draw_skybox(shader, skybox);
+}
 
+void MainController::draw() {
     draw_space_station();
+    draw_skybox();
 }
 
 void MainController::end_draw() {
