@@ -46,6 +46,7 @@ bool MainController::loop() {
 void MainController::draw_space_station() {
     auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
     auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
+    auto gui = engine::core::Controller::get<app::GuiController>();
     engine::resources::Model *space_station = resources->model("space_station");
 
     engine::resources::Shader *shader = resources->shader("basic");
@@ -55,17 +56,26 @@ void MainController::draw_space_station() {
     shader->set_mat4("view", graphics->camera()
                                      ->view_matrix());
     glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(0.0f, 0.0f, -50.0f));
-    model = glm::scale(model, glm::vec3(0.1f));
+    model = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.0f));
+    model = glm::scale(model, glm::vec3(0.01f));
     model = glm::rotate(model, glm::radians(-60.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     shader->set_mat4("model", model);
     shader->set_float("shininess", 40.0f);
 
     //Directional Light
-    shader->set_vec3("dir_light.direction", glm::vec3(-0.3f, -1.0f, 2.0f));
-    shader->set_vec3("dir_light.ambient", glm::vec3(0.4f));
-    shader->set_vec3("dir_light.diffuse", glm::vec3(0.8f));
-    shader->set_vec3("dir_light.specular", glm::vec3(1.2f));
+    glm::vec3 ambient, diffuse, specular;
+    float dir_intensity = gui->get_dir_light_intensity();
+
+    ambient = glm::vec3(0.3f) * dir_intensity;
+    diffuse = glm::vec3(0.6f) * dir_intensity;
+    specular = glm::vec3(0.9f) * dir_intensity;
+
+    shader->set_vec3("dir_light.direction", glm::vec3(-0.2f, -1.0f, -0.3f));
+    shader->set_vec3("dir_light.ambient", ambient);
+    shader->set_vec3("dir_light.diffuse", diffuse);
+    shader->set_vec3("dir_light.specular", specular);
+
+
     space_station->draw(shader);
 }
 

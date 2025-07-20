@@ -13,10 +13,12 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-void main() {
+void main()
+{
     FragPos = vec3(model * vec4(aPos, 1.0));
-    Normal = aNormal;
+    Normal = mat3(transpose(inverse(model))) * aNormal;
     TexCoords = aTexCoords;
+
     gl_Position = projection * view * vec4(FragPos, 1.0);
 }
 
@@ -25,44 +27,41 @@ void main() {
 
 out vec4 FragColor;
 
+in vec3 Normal;
+in vec3 FragPos;
+in vec2 TexCoords;
+
+uniform vec3 viewPos;
+uniform sampler2D texture_diffuse1;
+uniform float shininess;
+
 struct DirLight {
     vec3 direction;
     vec3 ambient;
-    vec3 specular;
     vec3 diffuse;
+    vec3 specular;
 };
-
-in vec2 TexCoords;
-in vec3 FragPos;
-in vec3 Normal;
-
-uniform vec3 viewPos;
-uniform float shininess;
-uniform sampler2D texture_diffuse1;
-
 uniform DirLight dir_light;
 
-vec3 calculate_dir_light(DirLight light, vec3 normal, vec3 view_dir);
-
-void main() {
+void main()
+{
     vec3 norm = normalize(Normal);
-    vec3 view_dir = normalize(viewPos - FragPos);
+    vec3 lightDir = normalize(-dir_light.direction);
 
-    vec3 res = calculate_dir_light(dir_light, norm, view_dir);
-    FragColor = vec4(texture(texture_diffuse1, TexCoords).rgb, 1.0);
-}
-
-vec3 calculate_dir_light(DirLight light, vec3 normal, vec3 view_dir) {
-    vec3 light_dir = normalize(-light.direction);
-    float diff = max(dot(normal, light_dir), 0.0);
-    vec3 reflect_dir = reflect(-light_dir, normal);
-    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), shininess);
-
+    // Ambient
     vec3 texColor = texture(texture_diffuse1, TexCoords).rgb;
+    vec3 ambient = dir_light.ambient * texColor;
 
-    vec3 ambient = light.ambient * texColor;
-    vec3 diffuse = light.diffuse * diff * texColor;
-    vec3 specular = light.specular * spec * vec3(1.0);
+    // Diffuse
+    float diff = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse = dir_light.diffuse * diff * texColor;
 
-    return ambient + diffuse + specular;
+    // Specular
+    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 reflectDir = reflect(-lightDir, norm);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+    vec3 specular = dir_light.specular * spec * vec3(1.0);
+
+    vec3 result = ambient + diffuse + specular;
+    FragColor = vec4(result, 1.0);
 }

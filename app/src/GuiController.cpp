@@ -26,11 +26,16 @@ void GuiController::draw() {
     auto camera = graphics->camera();
     graphics->begin_gui();
 
+    //Camera Information
     ImGui::Begin("Camera info");
     ImGui::Text("Camera position: (%f, %f, %f)", camera->Position
                                                        .x, camera->Position
                                                                  .y, camera->Position
                                                                            .z);
+    //Directional Light Information
+    ImGui::Separator();
+    ImGui::Text("Directional Light");
+    ImGui::SliderFloat("Intensity: ", &dir_light_intensity, 0.0f, 6.0f);
 
     ImGui::End();
 
