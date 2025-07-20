@@ -59,6 +59,13 @@ void MainController::draw_space_station() {
     model = glm::scale(model, glm::vec3(0.1f));
     model = glm::rotate(model, glm::radians(-60.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     shader->set_mat4("model", model);
+    shader->set_float("shininess", 40.0f);
+
+    //Directional Light
+    shader->set_vec3("dir_light.direction", glm::vec3(-0.3f, -1.0f, 2.0f));
+    shader->set_vec3("dir_light.ambient", glm::vec3(0.4f));
+    shader->set_vec3("dir_light.diffuse", glm::vec3(0.8f));
+    shader->set_vec3("dir_light.specular", glm::vec3(1.2f));
     space_station->draw(shader);
 }
 
