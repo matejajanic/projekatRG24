@@ -19,8 +19,10 @@ public:
 };
 
 void MainPlatformEventObserver::on_mouse_move(engine::platform::MousePosition position) {
-    auto gui_controller = engine::core::Controller::get<GuiController>();
-    if (!gui_controller->is_enabled()) {
+    auto gui_controller = engine::core::Controller::get<app::GuiController>();
+    auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
+    if (!gui_controller->is_enabled() && platform->key(engine::platform::KeyId::MOUSE_BUTTON_LEFT)
+                                                 .is_down()) {
         auto camera = engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
         camera->rotate_camera(position.dx, position.dy);
     }
