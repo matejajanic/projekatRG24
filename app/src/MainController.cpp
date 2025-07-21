@@ -226,7 +226,7 @@ void MainController::update() {
                                    .state() == engine::platform::Key::State::JustPressed) {
         shuttle_active = true;
         shuttle_direction = camera->Front;
-        shuttle_spawn_pos = camera->Position - shuttle_direction + glm::vec3(0.0f, -0.1f, 0.0f);
+        shuttle_spawn_pos = camera->Position + glm::vec3(0.0f, -0.1f, 0.0f);
     }
 
     if (shuttle_active) {
