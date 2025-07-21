@@ -7,6 +7,10 @@
       },
       "sphere": {
         "path": "sphere/sphere.obj"
+      },
+      "shuttle": {
+        "path": "shuttle/scene.gltf",
+        "flip_uvs": true
       }
     }
   },

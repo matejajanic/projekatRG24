@@ -6,6 +6,7 @@
 #define MAINCONTROLLER_HPP
 
 #include <engine/core/Controller.hpp>
+#include <glm/glm.hpp>
 
 namespace app {
 
@@ -17,6 +18,8 @@ class MainController : public engine::core::Controller {
     void draw_space_station();
 
     void draw_spheres();
+
+    void draw_shuttle();
 
     void update_camera();
 
@@ -34,6 +37,34 @@ public:
     std::string_view name() const override {
         return "app::MainController";
     }
+
+    float get_shuttle_speed() const {
+        return shuttle_speed;
+    }
+
+    void set_shuttle_speed(float v) {
+        shuttle_speed = v;
+    }
+
+    float get_shuttle_max_dist() const {
+        return shuttle_max_dist;
+    }
+
+    void set_shuttle_max_dist(float v) {
+        shuttle_max_dist = v;
+    }
+
+    bool is_shuttle_active() const {
+        return shuttle_active;
+    }
+
+
+private:
+    bool shuttle_active = false;
+    glm::vec3 shuttle_spawn_pos;
+    glm::vec3 shuttle_direction;
+    float shuttle_speed = 0.15f;
+    float shuttle_max_dist = 6.0f;
 };
 
 }
