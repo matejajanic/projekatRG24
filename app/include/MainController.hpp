@@ -7,6 +7,7 @@
 
 #include <engine/core/Controller.hpp>
 #include <glm/glm.hpp>
+#include <engine/graphics/PostProcess.hpp>
 
 namespace app {
 
@@ -65,6 +66,7 @@ private:
     glm::vec3 shuttle_direction;
     float shuttle_speed = 0.15f;
     float shuttle_max_dist = 6.0f;
+    std::unique_ptr<engine::graphics::PostProcess> post_process;
 };
 
 }

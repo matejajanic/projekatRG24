@@ -9,6 +9,7 @@
 #include <engine/graphics/Camera.hpp>
 #include <engine/core/Controller.hpp>
 #include <engine/platform/PlatformEventObserver.hpp>
+#include "PostProcess.hpp"
 
 struct ImGuiContext;
 
@@ -86,6 +87,8 @@ public:
     */
     void draw_skybox(const resources::Shader *shader, const resources::Skybox *skybox);
 
+    void on_window_resize(int width, int height);
+
     Camera *camera() {
         return &m_camera;
     }
@@ -160,6 +163,8 @@ private:
     void initialize() override;
 
     void terminate();
+
+    std::unique_ptr<PostProcess> post_process;
 
     PerspectiveMatrixParams m_perspective_params{};
     OrthographicMatrixParams m_ortho_params{};

@@ -42,6 +42,8 @@ void GraphicsController::initialize() {
     (void) io;
     RG_GUARANTEE(ImGui_ImplGlfw_InitForOpenGL(handle, true), "ImGUI failed to initialize for OpenGL");
     RG_GUARANTEE(ImGui_ImplOpenGL3_Init("#version 330 core"), "ImGUI failed to initialize for OpenGL");
+
+
 }
 
 void GraphicsController::terminate() {
@@ -62,6 +64,16 @@ void GraphicsPlatformEventObserver::on_window_resize(int width, int height) {
               .Right = static_cast<float>(width);
     m_graphics->orthographic_params()
               .Top = static_cast<float>(height);
+
+    m_graphics->on_window_resize(width, height);
+}
+
+void GraphicsController::on_window_resize(int width, int height) {
+    glViewport(0, 0, width, height);
+
+    if (post_process) {
+        post_process->resize(width, height);
+    }
 }
 
 std::string_view GraphicsController::name() const {

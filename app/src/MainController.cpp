@@ -40,6 +40,16 @@ void MainController::initialize() {
     auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
     platform->register_platform_event_observer(std::make_unique<MainPlatformEventObserver>());
     engine::graphics::OpenGL::enable_depth_testing();
+    auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
+    engine::resources::Shader *shader = resources->shader("post_process");
+    int w = platform->window()
+                    ->width();
+    int h = platform->window()
+                    ->height();
+    post_process = std::make_unique<engine::graphics::PostProcess>(
+            w, h,
+            shader
+    );
 }
 
 bool MainController::loop() {
@@ -241,6 +251,7 @@ void MainController::update() {
 }
 
 void MainController::begin_draw() {
+    post_process->begin();
     engine::graphics::OpenGL::clear_buffers();
 }
 
@@ -260,6 +271,7 @@ void MainController::draw() {
 }
 
 void MainController::end_draw() {
+    post_process->end();
     auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
     platform->swap_buffers();
 }
