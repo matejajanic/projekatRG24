@@ -188,6 +188,46 @@ void MainController::draw_shuttle() {
     shuttle_model->draw(shader);
 }
 
+void MainController::draw_asteroid() {
+    if (!asteroid_active) { return; }
+
+    //Drawing the asteroid
+    auto resources = Controller::get<engine::resources::ResourcesController>();
+    auto graphics = Controller::get<engine::graphics::GraphicsController>();
+    auto shader = resources->shader("sphere");
+    auto model = resources->model("sphere");
+
+    shader->use();
+    shader->set_mat4("projection", graphics->projection_matrix());
+    shader->set_mat4("view", graphics->camera()
+                                     ->view_matrix());
+
+    glm::mat4 m = glm::mat4(1.0f);
+    m = glm::translate(m, asteroid_position);
+    m = glm::scale(m, glm::vec3(0.00003f));
+
+    shader->set_mat4("model", m);
+    shader->set_vec3("color", glm::vec3(1.0f));
+
+    model->draw(shader);
+
+    //Drawing the asteroid "trail". Used the duplicating method for this implementation.
+    for (size_t i = 0; i < asteroid_trail.size(); ++i) {
+        float scale = 0.00001f + (float(i) / asteroid_trail.size()) * 0.00002f;
+        float alpha = 1.0f - float(i) / asteroid_trail.size();
+
+        glm::mat4 m = glm::mat4(1.0f);
+        m = glm::translate(m, asteroid_trail[i]);
+        m = glm::scale(m, glm::vec3(scale));
+
+        shader->set_mat4("model", m);
+        shader->set_vec3("color", glm::vec3(1.0f) * alpha);
+
+        model->draw(shader);
+    }
+
+}
+
 
 void MainController::update_camera() {
     auto gui_controller = engine::core::Controller::get<GuiController>();
@@ -248,6 +288,44 @@ void MainController::update() {
             shuttle_active = false;
         }
     }
+
+    //Updating the asteroid position
+    asteroid_timer += platform->dt();
+
+    if (!asteroid_active && asteroid_timer >= 10.0f) {
+        asteroid_timer = 0.0f;
+        asteroid_active = true;
+
+        glm::vec3 forward = glm::normalize(camera->Front);
+        glm::vec3 right = glm::normalize(glm::cross(forward, camera->Up));
+        glm::vec3 up = glm::normalize(camera->Up);
+
+        float x_offset = (rand() % 1000 / 1000.0f - 0.5f) * 2.0f;
+        float y_offset = (rand() % 1000 / 1000.0f - 0.5f) * 2.0f;
+
+        asteroid_position = camera->Position + forward * 15.0f + right * x_offset * 5.0f + up * y_offset * 5.0f;
+        asteroid_velocity = glm::normalize(glm::cross(up, forward)) * 2.5f;
+    }
+
+    if (asteroid_active) {
+        //Asteroid section
+        asteroid_position += asteroid_velocity * platform->dt();
+        //Trail section
+        trail_record_timer += platform->dt();
+        if (trail_record_timer > 0.01f) {
+            trail_record_timer = 0.0f;
+            asteroid_trail.push_back(asteroid_position);
+            if (asteroid_trail.size() > max_trail_points) {
+                asteroid_trail.erase(asteroid_trail.begin());
+            }
+        }
+
+        if (glm::length(asteroid_position - graphics->camera()
+                                                    ->Position) > 100.0f) {
+            asteroid_active = false;
+        }
+    }
+
 }
 
 void MainController::begin_draw() {
@@ -267,6 +345,7 @@ void MainController::draw() {
     draw_space_station();
     draw_shuttle();
     draw_spheres();
+    draw_asteroid();
     draw_skybox();
 }
 

@@ -22,6 +22,8 @@ class MainController : public engine::core::Controller {
 
     void draw_shuttle();
 
+    void draw_asteroid();
+
     void update_camera();
 
     void update() override;
@@ -67,6 +69,13 @@ private:
     float shuttle_speed = 0.15f;
     float shuttle_max_dist = 6.0f;
     std::unique_ptr<engine::graphics::PostProcess> post_process;
+    float asteroid_timer = 0.0f;
+    bool asteroid_active = false;
+    glm::vec3 asteroid_position;
+    glm::vec3 asteroid_velocity;
+    std::vector<glm::vec3> asteroid_trail;
+    int max_trail_points = 30;
+    float trail_record_timer = 0.0f;
 };
 
 }
