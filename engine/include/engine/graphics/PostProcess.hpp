@@ -22,12 +22,18 @@ public:
     void resize(unsigned int w,
                 unsigned int h);
 
+    void toggle_sharpen() { enabled = !enabled; }
+
+    bool is_sharpen_enabled() const { return enabled; }
+
 private:
     void initQuad();
 
     FrameBuffers fb;
     engine::resources::Shader *shader;
     unsigned int quadVAO{}, quadVBO{};
+
+    bool enabled = false;
 };
 
 }

@@ -16,6 +16,8 @@ PostProcess::PostProcess(unsigned int width,
 
     shader->use();
     shader->set_int("screenTexture", 0);
+    shader->set_vec2("offset", glm::vec2(1.0f / width, 1.0f / height));
+    shader->set_bool("sharpen", enabled);
     initQuad();
 }
 
@@ -55,6 +57,7 @@ void PostProcess::end() {
     fb.unbind();
     glDisable(GL_DEPTH_TEST);
     shader->use();
+    shader->set_bool("sharpen", enabled);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, fb.get_color_texture());
     glBindVertexArray(quadVAO);
@@ -64,4 +67,6 @@ void PostProcess::end() {
 
 void PostProcess::resize(unsigned int w, unsigned int h) {
     fb = FrameBuffers(w, h);
+    shader->use();
+    shader->set_vec2("offset", glm::vec2(1.0f / w, 1.0f / h));
 }

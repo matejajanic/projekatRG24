@@ -326,6 +326,13 @@ void MainController::update() {
         }
     }
 
+    //Sharpen
+    if (platform->key(engine::platform::KeyId::KEY_P)
+                .state() == engine::platform::Key::State::JustPressed) {
+        post_process->toggle_sharpen();
+        spdlog::info("Sharpen post-process {}", post_process->is_sharpen_enabled() ? "ENABLED" : "DISABLED");
+    }
+
 }
 
 void MainController::begin_draw() {
