@@ -332,7 +332,12 @@ void MainController::update() {
         post_process->toggle_sharpen();
         spdlog::info("Sharpen post-process {}", post_process->is_sharpen_enabled() ? "ENABLED" : "DISABLED");
     }
-
+    //Bloom
+    if (platform->key(engine::platform::KeyId::KEY_B)
+                .state() == engine::platform::Key::State::JustPressed) {
+        post_process->toggle_bloom();
+        spdlog::info("Bloom post-process {}", post_process->is_bloom_enabled() ? "ENABLED" : "DISABLED");
+    }
 }
 
 void MainController::begin_draw() {

@@ -26,6 +26,18 @@ public:
 
     bool is_sharpen_enabled() const { return enabled; }
 
+    void toggle_bloom() { bloomEnabled = !bloomEnabled; }
+
+    bool is_bloom_enabled() const { return bloomEnabled; }
+
+    void set_bloom_color(float targetHue, float hueWidth, float minS, float minV, float strength) {
+        bloomTargetHue = targetHue;
+        bloomHueWidth = hueWidth;
+        bloomMinS = minS;
+        bloomMinV = minV;
+        bloomStrength = strength;
+    }
+
 private:
     void initQuad();
 
@@ -34,6 +46,30 @@ private:
     unsigned int quadVAO{}, quadVBO{};
 
     bool enabled = false;
+
+    bool bloomEnabled = false;
+
+    //sejderi za bloom
+    engine::resources::Shader *bloomExtract = nullptr;
+    engine::resources::Shader *bloomBlur = nullptr;
+    engine::resources::Shader *bloomFinal = nullptr;
+
+    // ping-pong FBO
+    unsigned int pingpongFBO[2] = {0, 0};
+    unsigned int pingpongColor[2] = {0, 0};
+    unsigned int brightTex = 0;
+
+    //namestanje parametara u HSV za tirkiznu boju stanice
+    float bloomTargetHue = 0.50f;
+    float bloomHueWidth = 0.08f;
+    float bloomMinS = 0.25f;
+    float bloomMinV = 0.60f;
+    float bloomStrength = 1.2f;
+    glm::vec2 offset;
+
+    void initBloomBuffers(unsigned int w, unsigned int h);
+
+    void ensureBloomShaders();
 };
 
 }
