@@ -69,7 +69,7 @@ private:
     float shuttle_speed = 0.15f;
     float shuttle_max_dist = 6.0f;
     std::unique_ptr<engine::graphics::PostProcess> post_process;
-    float asteroid_timer = 0.0f;
+    float asteroid_timer = 3.0f;
     bool asteroid_active = false;
     glm::vec3 asteroid_position;
     glm::vec3 asteroid_velocity;
