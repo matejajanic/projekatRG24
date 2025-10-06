@@ -62,12 +62,11 @@ a more detailed mathematical process (except for the trajectories).
 
 ## Models:
 
-[link1]   
-[link2]
+Space shuttle - https://sketchfab.com/3d-models/space-shuttle-ff4b00b7ebb24fdd98fb96b08f2c43c9
+Space station - https://sketchfab.com/3d-models/deep-space-orbital-station-7d0681e00b274afbab45d49b8ada5c8f
+Sphere - Unfortunately, not sure where it was found
 
 ## Textures
 
-[link1]  
-[link2]
-
-{OTHER-RESOURCES}
+All the textures can be seen in the model links.
+Skybox - Unfortunately, as of October 6th 2025, I am not sure where this model was found.
