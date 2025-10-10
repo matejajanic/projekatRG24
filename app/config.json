@@ -1,11 +1,22 @@
 {
   "resources": {
     "models": {
+      "space_station": {
+        "path": "space_station/scene.gltf",
+        "flip_uvs": true
+      },
+      "sphere": {
+        "path": "sphere/sphere.obj"
+      },
+      "shuttle": {
+        "path": "shuttle/scene.gltf",
+        "flip_uvs": true
+      }
     }
   },
   "window": {
-    "height": 600,
+    "height": 1200,
     "title": "Hello, window!",
-    "width": 800
+    "width": 1600
   }
 }
