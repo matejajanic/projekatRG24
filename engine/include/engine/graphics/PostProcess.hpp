@@ -38,6 +38,8 @@ public:
         bloomStrength = strength;
     }
 
+    void terminate();
+
 private:
     void initQuad();
 

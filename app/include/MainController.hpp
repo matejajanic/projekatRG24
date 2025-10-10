@@ -36,6 +36,8 @@ class MainController : public engine::core::Controller {
 
     void end_draw() override;
 
+    void terminate() override;
+
 public:
     std::string_view name() const override {
         return "app::MainController";

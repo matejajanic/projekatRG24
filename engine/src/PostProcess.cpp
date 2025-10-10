@@ -22,13 +22,7 @@ PostProcess::PostProcess(unsigned int width,
     initBloomBuffers(width, height);
 }
 
-PostProcess::~PostProcess() {
-    glDeleteVertexArrays(1, &quadVAO);
-    glDeleteBuffers(1, &quadVBO);
-    glDeleteFramebuffers(2, pingpongFBO);
-    glDeleteTextures(2, pingpongColor);
-    glDeleteTextures(1, &brightTex);
-}
+PostProcess::~PostProcess() {}
 
 void PostProcess::initQuad() {
     float quadVertices[] = {
@@ -84,7 +78,6 @@ void PostProcess::ensureBloomShaders() {
     bloomExtract = res->shader("bloom_extract");
     bloomBlur = res->shader("bloom_blur");
     bloomFinal = res->shader("bloom_final");
-
     bloomExtract->use();
     bloomExtract->set_int("uScene", 0);
     bloomBlur->use();
@@ -118,7 +111,7 @@ void PostProcess::end() {
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         bool horizontal = true;
-        int passes = 8; // po želji
+        int passes = 8;
         for (int i = 0; i < passes; i++) {
             glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal ? 1 : 0]);
             bloomBlur->use();
@@ -162,4 +155,13 @@ void PostProcess::resize(unsigned int w, unsigned int h) {
     shader->set_vec2("offset", offset);
 
     initBloomBuffers(w, h);
+}
+
+void PostProcess::terminate() {
+    glDeleteVertexArrays(1, &quadVAO);
+    glDeleteBuffers(1, &quadVBO);
+    glDeleteFramebuffers(2, pingpongFBO);
+    glDeleteTextures(2, pingpongColor);
+    glDeleteTextures(1, &brightTex);
+    fb.terminate();
 }

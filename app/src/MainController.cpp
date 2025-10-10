@@ -366,4 +366,8 @@ void MainController::end_draw() {
     auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
     platform->swap_buffers();
 }
+
+void MainController::terminate() {
+    post_process->terminate();
+}
 }

@@ -17,6 +17,8 @@ public:
 
     void unbind();
 
+    void terminate();
+
     unsigned int get_color_texture() const { return color_buffer; }
 
 private:

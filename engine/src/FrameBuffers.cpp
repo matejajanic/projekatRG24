@@ -12,11 +12,7 @@ FrameBuffers::FrameBuffers(unsigned int width, unsigned int height) : SCR_WIDTH(
     init_buffers();
 }
 
-FrameBuffers::~FrameBuffers() {
-    glDeleteFramebuffers(1, &FBO);
-    glDeleteTextures(1, &color_buffer);
-    glDeleteRenderbuffers(1, &RBO);
-}
+FrameBuffers::~FrameBuffers() {}
 
 void FrameBuffers::init_buffers() {
     glGenFramebuffers(1, &FBO);
@@ -57,6 +53,12 @@ void FrameBuffers::bind() {
 
 void FrameBuffers::unbind() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void FrameBuffers::terminate() {
+    glDeleteFramebuffers(1, &FBO);
+    glDeleteTextures(1, &color_buffer);
+    glDeleteRenderbuffers(1, &RBO);
 }
 
 }
